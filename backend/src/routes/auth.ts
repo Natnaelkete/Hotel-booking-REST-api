@@ -54,7 +54,7 @@ router.post(
         maxAge: 86400000,
       });
 
-      return res.sendStatus(200).json({ userId: user._id });
+      return res.status(200).json({ userId: user._id });
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: "Something went wrong" });
