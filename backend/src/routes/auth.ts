@@ -4,6 +4,7 @@ import { check, validationResult } from "express-validator";
 import jwt from "jsonwebtoken";
 
 import User from "../models/user";
+import verifyToken from "../middleware/auth";
 
 const router = express.Router();
 
@@ -61,5 +62,14 @@ router.post(
     }
   }
 );
+
+router.get("/validate-token", verifyToken, (req: Request, res: Response) => {
+  res.status(200).send({ userId: req.userId });
+});
+
+router.post("/logout", (req: Request, res: Response) => {
+  res.clearCookie("auth_token");
+  res.status(200).json({ message: "Logged out successfully" });
+});
 
 export default router;
