@@ -4,7 +4,7 @@ import path from "path";
 const UI_URL = "http://localhost:3000";
 
 test.beforeEach(async ({ page }) => {
-  await page.goto(UI_URL);
+  await page.goto(`${UI_URL}/add-hotel`);
 
   // get the sign in button
   await page.getByRole("link", { name: "Sign In" }).click();
