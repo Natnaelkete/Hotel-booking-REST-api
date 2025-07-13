@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import path from "path";
 
 const UI_URL = "http://localhost:3000";
 
@@ -35,4 +36,13 @@ test("Should allow users to add a hotels", async ({ page }) => {
 
   await page.locator(`[name="adultCount]`).fill("2");
   await page.locator(`[name="childCount]`).fill("4");
+
+  await page.setInputFiles('[name="imageFiles"]', [
+    path.join(__dirname, "files", "1.jpeg"),
+    path.join(__dirname, "files", "2.jpeg"),
+  ]);
+
+  await page.getByRole("button", { name: "Save" }).click();
+
+  await expect(page.getByText("Hotel Saved")).toBeVisible();
 });
