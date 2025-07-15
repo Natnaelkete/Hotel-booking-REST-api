@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import userRoute from "./routes/userRoute";
 import loginRoute from "./routes/auth";
 import myHotelsRoute from "./routes/my-hotels";
+import hotelRoutes from "./routes/hotels";
 
 const app = express();
 app.use(cookieParser());
@@ -25,6 +26,7 @@ connectDb();
 app.use("/api/user", userRoute);
 app.use("/api/user", loginRoute);
 app.use("/api/myHotels", myHotelsRoute);
+app.use("/api/hotels", hotelRoutes);
 
 app.listen(7000, () => {
   console.log("Server is running of localhost:7000");
