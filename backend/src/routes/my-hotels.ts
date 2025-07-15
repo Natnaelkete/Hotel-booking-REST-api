@@ -66,4 +66,53 @@ router.get("/", verifyToken, async (req: Request, res: Response) => {
   }
 });
 
+router.get("/:id", verifyToken, async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    const hotel = await Hotel.findOne({ _id: id });
+    if (hotel) {
+      return res.status(400).json({ message: "There is no hotel" });
+    }
+    res.json(hotel);
+  } catch (error) {
+    console.error("Error fetching hotels:", error);
+    return res.status(500).json({ message: "Internal server error" });
+  }
+});
+
+router.put(
+  "/:hotelId",
+  verifyToken,
+  upload.array("imageFiles"),
+  async (req: Request, res: Response) => {
+    try {
+      const { hotelId } = req.params;
+      const updatedHotel: HotelType = req.body;
+
+      const hotel = await Hotel.findOneAndUpdate(
+        {
+          _id: hotelId,
+          userId: req.userId,
+        },
+        updatedHotel,
+        { new: true }
+      );
+
+      if (!hotel) {
+        return res.status(400).json({ message: "There is no hotel" });
+      }
+
+      const files = req.files as Express.Multer.File[];
+      const updatedImageUrl = files.map((file) => file.path);
+
+      hotel.imageUrls = [...updatedImageUrl, ...(updatedHotel.imageUrls || [])];
+
+      await hotel.save();
+    } catch (error) {
+      console.error("Error fetching hotels:", error);
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+);
+
 export default router;
